@@ -46,20 +46,29 @@ describe("describeNoteDraft", () => {
   });
 
   it("allows a draft exactly at the limit", () => {
-    const draft = describeNoteDraft("a".repeat(10), null, 10);
+    const draft = describeNoteDraft("a".repeat(MAX_NOTE_LENGTH), null);
     expect(draft.tooLong).toBe(false);
     expect(draft.canSave).toBe(true);
   });
 
   it("blocks a draft one character over the limit", () => {
-    const draft = describeNoteDraft("a".repeat(11), null, 10);
-    expect(draft).toMatchObject({ length: 11, tooLong: true, canSave: false });
+    const draft = describeNoteDraft("a".repeat(MAX_NOTE_LENGTH + 1), null);
+    expect(draft).toMatchObject({
+      length: MAX_NOTE_LENGTH + 1,
+      tooLong: true,
+      canSave: false,
+    });
   });
 
-  it("uses the stored note limit by default", () => {
-    const over = describeNoteDraft("a".repeat(MAX_NOTE_LENGTH + 1), null);
-    expect(over.tooLong).toBe(true);
-    const at = describeNoteDraft("a".repeat(MAX_NOTE_LENGTH), null);
-    expect(at.tooLong).toBe(false);
+  it("does not count surrounding whitespace toward the limit", () => {
+    const draft = describeNoteDraft(
+      `  ${"a".repeat(MAX_NOTE_LENGTH)}\n\n`,
+      null
+    );
+    expect(draft).toMatchObject({
+      length: MAX_NOTE_LENGTH,
+      tooLong: false,
+      canSave: true,
+    });
   });
 });

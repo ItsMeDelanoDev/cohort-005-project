@@ -11,8 +11,7 @@ export type { NoteDraft };
  */
 export function describeNoteDraft(
   draft: string,
-  savedBody: string | null,
-  maxLength: number = MAX_NOTE_LENGTH
+  savedBody: string | null
 ): NoteDraft {
-  return describeDraft(draft, savedBody, maxLength);
+  return describeDraft(draft, savedBody, MAX_NOTE_LENGTH);
 }

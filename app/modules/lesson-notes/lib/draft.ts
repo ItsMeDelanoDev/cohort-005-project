@@ -11,12 +11,14 @@ export function describeDraft(
   savedBody: string | null,
   maxLength: number
 ): NoteDraft {
-  const length = draft.length;
+  // The server trims before it checks the limit and stores, so measure and
+  // compare trimmed text: whitespace at the ends is never saved, so it neither
+  // counts toward the limit nor makes a saved note an edit worth a save.
+  const trimmed = draft.trim();
+  const length = trimmed.length;
   const tooLong = length > maxLength;
-  const empty = draft.trim().length === 0;
-  // The server trims before it stores, so compare trimmed text: adding a
-  // trailing newline to a saved note is not an edit worth a save.
-  const unchanged = draft.trim() === (savedBody ?? "").trim();
+  const empty = length === 0;
+  const unchanged = trimmed === (savedBody ?? "").trim();
 
   return {
     length,
