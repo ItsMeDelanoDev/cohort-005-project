@@ -70,11 +70,8 @@ function NoteFooter({
         {isSaving ? "Saving..." : "Save note"}
       </Button>
 
-      {error ? (
-        <span className="text-sm text-destructive">{error}</span>
-      ) : (
-        <NoteStatus note={note} unchanged={draft.unchanged} />
-      )}
+      <NoteStatus note={note} unchanged={draft.unchanged} />
+      {error && <span className="text-sm text-destructive">{error}</span>}
 
       <span
         className={cn(
